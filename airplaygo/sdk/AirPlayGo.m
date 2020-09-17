@@ -29,21 +29,25 @@
 
 - (void)MYCAirplayManager:(MYCAirplayManager *)airplayManager searchedAirplayDevice:(NSMutableArray<MYCAirplayDevice *> *)deviceList
 {
-    NSLog(@"已经获取到设备列表");
+    NSLog(@"已经获取更新到设备列表");
 }
 
 -(void)MYCAirplayManager:(MYCAirplayManager *)airplayManager searchAirplayDeviceFinish:(NSMutableArray<MYCAirplayDevice *> *)deviceList
 {
     NSLog(@"搜索设备操作完成");
     MYCAirplayDevice *device = deviceList.firstObject;
-    NSLog(@"连接设备%@", device.displayName);
-//    [[MYCAirplayManager sharedManager] activateSocketToDevice:device];
+    NSLog(@"5s后连接设备%@", device.displayName);
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+
+        NSLog(@"连接设备名称%@-host:%@-%hu-%@", device.displayName, device.hostName, device.port, device.domain);
+        [[MYCAirplayManager sharedManager] activateSocketToDevice:device];
+    });
 }
 
 -(void)MYCAirplayManager:(MYCAirplayManager *)airplayManager selectedDeviceOnLine:(MYCAirplayDevice *)airplayDevice
 {
     NSLog(@"设备已连接---%@",airplayDevice.displayName);
-    NSLog(@"开始播放");
+    NSLog(@"开始播放%@", _url);
     [[MYCAirplayManager sharedManager] playVideoOnAirplayDevice:nil videoUrlStr:_url];
 }
 
